@@ -23,8 +23,9 @@
 
         <dependency>
             <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
+            <artifactId>flyway-database-postgresql</artifactId>
             <version>10.7.2</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>
@@ -33,5 +34,20 @@
             <version>6.4.4.Final</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>10.0.0</version>
+                <configuration>
+                    <url>jdbc:postgresql://localhost:5432/space_travel</url>
+                    <user>postgres</user>
+                    <password>strong_password</password>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
