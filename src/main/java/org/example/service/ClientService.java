@@ -6,6 +6,8 @@ import org.example.entity.Client;
 import java.util.List;
 import java.util.Objects;
 
+import static org.example.util.ServiceUtil.isNameValid;
+
 public class ClientService {
 
     private final ClientDAO clientDAO = new ClientDAO();
@@ -19,6 +21,9 @@ public class ClientService {
     }
 
     public void add(Client client) {
+        if (!isNameValid(client.getName())) {
+            throw new IllegalArgumentException("Invalid client name");
+        }
         Client clientByName = clientDAO.findByName(client.getName());
 
         if (clientByName != null) {
@@ -30,7 +35,11 @@ public class ClientService {
     public void update(Client client) {
         Client clientById = clientDAO.findById(client.getId());
 
-        if (clientById != null && !Objects.equals(clientById.getName(), client.getName())) {
+        if (clientById == null) {
+            throw new IllegalStateException("Client with id '" + client.getId() + "' does not exist");
+        }
+
+        if (isNameValid(client.getName()) && !Objects.equals(client.getName(), clientById.getName())) {
             Client clientByName = clientDAO.findByName(client.getName());
 
             if (clientByName != null) {
@@ -45,6 +54,11 @@ public class ClientService {
     }
 
     public Client deleteById(Long id) {
+        Client clientById = clientDAO.findById(id);
+
+        if (clientById == null) {
+            throw new IllegalStateException("Client with id '" + id + "' does not exist");
+        }
         return clientDAO.deleteById(id);
     }
 }
